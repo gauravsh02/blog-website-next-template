@@ -56,9 +56,9 @@ export default function Navbar () {
                     <div>
                         <div className={`flex-1 justify-self-evenly pb-3 mt-8 md:block md:pb-0 md:mt-0 ${ navbarOpen ? "block" : "hidden" }`} >
                             <ul className="items-center justify-between space-y-18 md:flex md:space-x-32 md:space-y-0">
-                                <li className="hover:text-indigo-200 dark:text-white"> <a href="/?#home-section">Home</a> </li>
-                                <li className="hover:text-indigo-200 dark:text-white"> <a href="/?#image-section">Images</a> </li>
-                                <li className="hover:text-indigo-200 dark:text-white"> <a href="/?#blog-section">Blogs</a> </li>
+                                <li className="hover:text-indigo-200 dark:text-white"> <Link href="/?#home-section">Home</Link> </li>
+                                <li className="hover:text-indigo-200 dark:text-white"> <Link href="/?#image-section">Images</Link> </li>
+                                <li className="hover:text-indigo-200 dark:text-white"> <Link href="/?#blog-section">Blogs</Link> </li>
                             </ul>
                             {/* <div className="mt-3 space-y-2 lg:hidden md:inline-block">
                                 <ul>
