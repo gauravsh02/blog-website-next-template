@@ -225,7 +225,7 @@ export default function Dashboard () {
                             </div>
 
                             <div className="flex items-center px-2">
-                                <input checked id="checked-checkbox" type="checkbox" checked={modalCategoryData.categoryStatus} onChange={e => { setInputDataForCategory(e.target.value, "categoryStatus"); }} className="block w-full p-2  w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                <input id="checked-checkbox" type="checkbox" checked={modalCategoryData.categoryStatus} onChange={e => { setInputDataForCategory(e.target.value, "categoryStatus"); }} className="block w-full p-2  w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                                 <label htmlFor="checked-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Active</label>
                             </div>
                         </form>
@@ -317,7 +317,7 @@ export default function Dashboard () {
                                                                     </div>
 
                                                                     <div className="flex items-center px-2">
-                                                                        <input checked id="checked-checkbox" type="checkbox" checked={modalCategoryData.categoryStatus} onChange={e => { setInputDataForCategory(e.target.value, "categoryStatus"); }} className="block w-full p-2  w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                                                        <input id="checked-checkbox" type="checkbox" checked={modalCategoryData.categoryStatus} onChange={e => { setInputDataForCategory(e.target.value, "categoryStatus"); }} className="block w-full p-2  w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                                                                         <label htmlFor="checked-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Active</label>
                                                                     </div>
                                                                 </form>

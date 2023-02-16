@@ -80,12 +80,12 @@ export default function Dashboard () {
                                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-left dark:text-gray-200"> {user.role} </td>
                                                     </tr>
                                                 ) : (
-                                                    <tr className="bg-white border-b dark:bg-slate-800 dark:border-slate-400">
+                                                    <tr key={index} className="bg-white border-b dark:bg-slate-800 dark:border-slate-400">
                                                         <th className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-left dark:text-gray-200 "> {index+1} </th>
                                                         <th className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-left dark:text-gray-200 "> {user.name} </th>
                                                         <th className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-left dark:text-gray-200 "> {user.email} </th>
-                                                    <th className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-left dark:text-gray-200 "> {user.role} </th>
-                                                </tr>
+                                                        <th className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-left dark:text-gray-200 "> {user.role} </th>
+                                                    </tr>
                                             )
                                         ))}
 

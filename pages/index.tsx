@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Inter } from '@next/font/google';
 
 import Navbar from '../components/navbar';
@@ -83,7 +84,7 @@ export default function Home( { publicPosts } ) {
                     {
                         publicPosts.length ? (
                             publicPosts.map( (post, index) => (
-                                <div className="flex justify-center my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
+                                <div key={index} className="flex justify-center my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
                                     <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                                         <a href={"posts/"+post.slug}>
                                             <Image width={400} height={200} className="rounded-t-lg aspect-[1/1]" src={post.bannerImage} alt="" />
@@ -105,7 +106,7 @@ export default function Home( { publicPosts } ) {
                     }
                 </div>
                 <div className="text-center py-4">
-                    <a href="/posts" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Check all Posts</a>
+                    <Link href="/posts" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Check all Posts</Link>
                 </div>
             </section>
 

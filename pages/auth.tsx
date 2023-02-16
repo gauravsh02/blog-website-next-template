@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 import type { NextPage } from "next";
 import { useSession, signIn, signOut, getProviders, getSession } from "next-auth/react";
 import utils from "../utils/utils";
@@ -169,7 +170,7 @@ const Auth: NextPage = ({ providers }: any) => {
                     <div className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
 
                         <div className="flex justify-center items-center pb-5">
-                            <img className="max-w-lg h-auto rounded-lg" src="/images/logo.svg" alt="image description" />
+                            <Image className="max-w-lg h-auto rounded-lg" width={80} height={35} src="/images/logo.svg" alt={"image description"} />
                         </div>
 
                         <div>

@@ -17,7 +17,7 @@ const defaultFonts = [
     "Verdana"
 ];
 
-const Editor = ({defaultValue = "", setEditorValue = undefined}) => {
+const Editor = ({defaultValue = "", setEditorValue:any = undefined}) => {
 
     const [value, setValue] = useState("");
 
@@ -25,7 +25,7 @@ const Editor = ({defaultValue = "", setEditorValue = undefined}) => {
         setValue(defaultValue);
     }, []);
 
-    const setSunEditorValue = function (editorValue) {
+    const setSunEditorValue = function (editorValue: any) {
         setValue(editorValue);
         if( typeof setEditorValue === "function" ) {
             setEditorValue(editorValue, "content");

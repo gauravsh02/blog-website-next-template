@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import Navbar from '../../../components/navbar';
 import Footer from '../../../components/footer';
 
@@ -89,7 +90,7 @@ export default function posts( {postData} ) {
                                                     </div> */}
                                                 </div>
                                                 <div className="pt-4 xl:pt-8">
-                                                    <a className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400" href="/posts">← Back to the blog</a>
+                                                    <Link className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400" href="/posts">← Back to the blog</Link>
                                                 </div>
                                             </footer>
                                         </div>
