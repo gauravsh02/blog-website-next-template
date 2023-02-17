@@ -11,7 +11,7 @@ const Auth: NextPage = ({ providers }: any) => {
     const [authType, setAuthType] = useState("Login");
 
     interface FormDataInputInterfaceType {
-        [index: string]: { key: string; type: string; name: string; value: string | boolean ;error: string }
+        [index: string]: { key: string; type: string; value: string | boolean ;error: string }
     }
     const [formData, setFormData] = useState<FormDataInputInterfaceType>({
         "name" : {"key": "name", type: "string", "value": "", "error": "" },

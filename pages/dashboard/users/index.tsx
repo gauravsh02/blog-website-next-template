@@ -71,7 +71,7 @@ export default function Dashboard () {
                                         </thead>
                                         <tbody>
 
-                                        {userData.map((user, index) => (
+                                        {userData.map((user:any, index:number) => (
                                             ( index % 2 == 0 ) ? (
                                                 <tr key={index} className="bg-gray-100 border-b dark:bg-slate-600 dark:border-slate-400">
                                                         <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap text-left dark:text-gray-200"> {index+1} </td>

@@ -28,15 +28,15 @@ export default function Dashboard () {
     
     const [isLoading, setIsLoading] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
-    const [categoryData, setCategoryData] = useState([]);
+    const [categoryData, setCategoryData] = useState <categoryData[]>([]);
 
     const [modalCategoryData, setModalCategoryData] = useState( categoryInitData );
-    const [modalCategoryErrorArray, setModalCategoryErrorArray] = useState( [] );
+    const [modalCategoryErrorArray, setModalCategoryErrorArray] = useState <string[]> ( [] );
 
     useEffect( () => {
         setIsLoading(true);
         const getCategoryList = async () => {
-            const fetchData = await fetch("/api/categories?page="+paginationData.page+"?per_page="+paginationData.per_page, { method: 'GET', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' } });
+            const fetchData = await fetch("/api/categories?page="+paginationData.page+"&per_page="+paginationData.per_page, { method: 'GET', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' } });
             const categoryList = await fetchData.json();
 
             setCategoryData(categoryList.data);
@@ -51,7 +51,7 @@ export default function Dashboard () {
         getCategoryList();
     }, [currentPage, perPage, refreshKey])
 
-    const setInputDataForCategory = function(value, inputType) {
+    const setInputDataForCategory = function(value:any, inputType:string) {
         if( inputType === "categoryName" ) {
             setModalCategoryData({...modalCategoryData, [inputType]: value});
         } else if ( inputType === "categoryStatus") {
@@ -105,7 +105,7 @@ export default function Dashboard () {
         setModalCategoryErrorArray([]);
     }
 
-    const deleteCategory = async function (category) {
+    const deleteCategory = async function (category: any) {
         const toastObj = toast.loading("Deleting...")
 
         const fetchData = await fetch("/api/categories", { 
@@ -126,7 +126,7 @@ export default function Dashboard () {
         }
     }
 
-    const updateCategoryStatus = async function (e, category) {
+    const updateCategoryStatus = async function (e:any, category:any) {
         const toastObj = toast.loading("Updating...")
 
         const fetchData = await fetch("/api/categories/"+category.categoryId+"/status", { 
@@ -147,7 +147,7 @@ export default function Dashboard () {
         }
     }
 
-    const setCategoryUpdateData = async function (category) {
+    const setCategoryUpdateData = async function (category:any) {
         setModalCategoryData(category);
         return true;
     }
@@ -189,6 +189,10 @@ export default function Dashboard () {
         
     }
 
+    const dummyInit = function(e:any) {
+        return true;
+    }
+
     return (<Layout>
         <div className="bg-slate-200 dark:bg-slate-800 rounded-md p-8 h-full">
 
@@ -199,7 +203,7 @@ export default function Dashboard () {
                     </h1>
                 </div>
                 <div className="w-1/2 flex justify-end">
-                    <Modals modalSize={"small"} params={undefined} buttonText={"Create Category"} modalTitle={"Create Category"} successButtonText={"Create"} cancelButtonText={"Cancel"} initAction={undefined} successAction={createCategoryAction} cancelAction={cancelCategoryAction} >
+                    <Modals modalSize={"small"} params={undefined} buttonText={"Create Category"} modalTitle={"Create Category"} successButtonText={"Create"} cancelButtonText={"Cancel"} initAction={dummyInit} successAction={createCategoryAction} cancelAction={cancelCategoryAction} buttonClass={undefined} isResourceLoading={isLoading} >
                         <form>
 
                             { modalCategoryErrorArray.length ? (<div className="py-2">
@@ -292,6 +296,7 @@ export default function Dashboard () {
                                                                 initAction={setCategoryUpdateData}
                                                                 successAction={updateCategoryAction} 
                                                                 cancelAction={cancelCategoryAction}
+                                                                isResourceLoading={isLoading} 
                                                             >
                                                                 <form>
                                                                     { modalCategoryErrorArray.length ? (<div className="py-2">
@@ -331,9 +336,10 @@ export default function Dashboard () {
                                                                 modalTitle={"Delete Category"} 
                                                                 successButtonText={"Delete"} 
                                                                 cancelButtonText={"Cancel"} 
-                                                                initAction={undefined} 
+                                                                initAction={dummyInit} 
                                                                 successAction={deleteCategory} 
-                                                                cancelAction={undefined}
+                                                                cancelAction={dummyInit}
+                                                                isResourceLoading={isLoading}
                                                             >
                                                                 <>
                                                                     <svg aria-hidden="true" className="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>

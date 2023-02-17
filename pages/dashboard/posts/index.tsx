@@ -17,7 +17,10 @@ import { RemoveBadgeClose } from "../../../components/logo";
 export default function Dashboard () {
 
     interface postData {
-        postId: string, title: string, slug: string, summary: string, content: string, tags: string[], tagsStr: string , categoryStr: string, category: string[], bannerImage: string, bannerImageFile: any
+        postId: string, title: string, slug: string, summary: string, content: string, tags: string[], tagsStr: string , categoryStr: string, category: string[], bannerImage: string, bannerImageFile: any, isPublished?: boolean, updatedAt?:any
+    }
+    interface categoryData {
+        categoryId: string, categoryName: string, categoryStatus: boolean
     }
 
     const postInitData: postData = {
@@ -42,16 +45,16 @@ export default function Dashboard () {
     
     const [isLoading, setIsLoading] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
-    const [postData, setPostData] = useState([]);
+    const [postData, setPostData] = useState<postData[]>([]);
 
     const [modalPostData, setModalPostData] = useState( postInitData );
-    const [postDataError, setPostDataError] = useState( [] );
+    const [postDataError, setPostDataError] = useState<string[]>( [] );
     const [isResourceLoading, setIsResourceLoading] = useState(false);
 
     // temp for editor
     const [editorData, setEditorData] = useState( "" );
 
-    const [activeCategoryList, setActiveCategoryList] = useState( [] );
+    const [activeCategoryList, setActiveCategoryList] = useState<categoryData[]>( [] );
 
     useEffect( () => {
         setIsLoading(true);
@@ -83,7 +86,7 @@ export default function Dashboard () {
 
     }, [])
 
-    const setInputDataForPost = function(value, inputType) {
+    const setInputDataForPost = function(value:any, inputType:string) {
         if( inputType === "title" || inputType === "slug" || inputType === "summary" ) {
             setModalPostData({...modalPostData, [inputType]: value});
         } else if ( inputType === "tagsStr" ) {
@@ -99,7 +102,7 @@ export default function Dashboard () {
         }
     }
 
-    const handleKeyDown = function(e, inputType) {
+    const handleKeyDown = function(e:any, inputType:any) {
         if( e.key === "Enter" ) {
             // if( inputType === "categoryStr"  && !utils.isEmpty(modalPostData.categoryStr) ) {
             //     setModalPostData({...modalPostData, categoryStr: "", category: [ modalPostData.categoryStr ] });
@@ -112,7 +115,7 @@ export default function Dashboard () {
         }
     }
 
-    const removeTagByIndex = function( index ) {
+    const removeTagByIndex = function( index:number ) {
         let tagsArray = modalPostData.tags;
         tagsArray.splice(index, 1);
         setModalPostData({...modalPostData, tags: tagsArray });
@@ -229,7 +232,7 @@ export default function Dashboard () {
     //      setInputDataForPost(editorData, "content");
     // }
 
-    const deletePost = async function (post) {
+    const deletePost = async function (post:any) {
         
         setIsResourceLoading(true);
         const toastObj = toast.loading("Deleting...")
@@ -255,7 +258,7 @@ export default function Dashboard () {
 
     }
 
-    const updatePostStatus = async function (e, post) {
+    const updatePostStatus = async function (e:any, post:any) {
         const toastObj = toast.loading("Updating...")
 
         const fetchData = await fetch("/api/posts/"+post.postId+"/status", { 
@@ -276,12 +279,12 @@ export default function Dashboard () {
         }
     }
 
-    const selectBannerImage = async function (e) {
-        const file = await utils.convertFileToBase64(e.target.files[0]);
+    const selectBannerImage = async function (e:any) {
+        const file:any = await utils.convertFileToBase64(e.target.files[0]);
         setModalPostData({...modalPostData, bannerImageFile: file, bannerImage: file.name })
     }
 
-    const updatePostInit = async function(post) {
+    const updatePostInit = async function(post:any) {
         setEditorData(post.content);
         setModalPostData(post);
         return true;
@@ -361,6 +364,10 @@ export default function Dashboard () {
 
     }
 
+    const dummyInit = function(e:any) {
+        return true;
+    }
+
     return (<Layout>
         <div className="bg-slate-200 dark:bg-slate-800 rounded-md p-8 h-full">
 
@@ -371,7 +378,7 @@ export default function Dashboard () {
                     </h1>
                 </div>
                 <div className="w-1/2 flex justify-end">
-                    <Modals modalSize={"extralarge"} buttonText={"Create Post"} modalTitle={"Create Post"} initAction={createPostInit} successAction={createNewPost} cancelAction={cancelCreateNewPost} successButtonText={"Create Post"} cancelButtonText={"Cancel"} isResourceLoading={isResourceLoading} >
+                    <Modals modalSize={"extralarge"} buttonText={"Create Post"} modalTitle={"Create Post"} params={undefined} buttonClass={undefined} initAction={createPostInit} successAction={createNewPost} cancelAction={cancelCreateNewPost} successButtonText={"Create Post"} cancelButtonText={"Cancel"} isResourceLoading={isResourceLoading} >
                         <form>
 
                         { postDataError.length ? (<div className="py-2">
@@ -619,9 +626,9 @@ export default function Dashboard () {
                                                         modalTitle={"Delete Post"} 
                                                         successButtonText={"Delete"} 
                                                         cancelButtonText={"Cancel"} 
-                                                        initAction={undefined} 
+                                                        initAction={dummyInit} 
                                                         successAction={deletePost} 
-                                                        cancelAction={undefined}
+                                                        cancelAction={dummyInit}
                                                         isResourceLoading={isResourceLoading}
                                                     >
                                                         <>

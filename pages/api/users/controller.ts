@@ -11,8 +11,8 @@ export async function getUserList ( req: NextApiRequest ) {
 
     try {
         const pageOptions = {
-            page: parseInt(req?.query?.page, 10) || 1,
-            per_page: parseInt(req?.body?.per_page, 10) || 10
+            page: Number(req?.query?.page || 1),
+            per_page: Number(req?.body?.per_page || 10)
         };
         const data = await User.find().select("userId name email image role createdAt").skip((pageOptions.page ? pageOptions.page - 1 : 0) * pageOptions.per_page).limit(pageOptions.per_page).sort({createdAt: "desc"});
         const totalCount = await User.countDocuments();

@@ -17,7 +17,7 @@ const defaultFonts = [
     "Verdana"
 ];
 
-const Editor = ({defaultValue = "", setEditorValue:any = undefined}) => {
+const Editor = ({defaultValue = "", setEditorValue = (a:any, b:any)=>{} }) => {
 
     const [value, setValue] = useState("");
 
@@ -35,7 +35,6 @@ const Editor = ({defaultValue = "", setEditorValue:any = undefined}) => {
     return (
         <div>
             <SunEditor
-                plugin=""
                 setContents={value}
                 onChange={setSunEditorValue}
                 setOptions={{
