@@ -2,7 +2,24 @@ import { useState, useEffect } from "react";
 import { MiniLoadingSpinner } from "./loadingSpinner";
 import {ModalCloseSquareSmall} from "./logo";
 
-export default function Modals ( { children, params = undefined, modalSize, buttonClass = undefined, buttonText, modalTitle, successButtonText = "", cancelButtonText = "", initAction = undefined, successAction = undefined, cancelAction = undefined, isResourceLoading = undefined } ) {
+
+type mAction = (a: any) => any;
+interface ModalInterface {
+    children: any;
+    params: any;
+    modalSize: any;
+    buttonClass: any;
+    buttonText: any;
+    modalTitle: any;
+    successButtonText: any;
+    cancelButtonText: any;
+    initAction: mAction;
+    successAction: mAction;
+    cancelAction: mAction;
+    isResourceLoading: any;
+}
+
+export default function Modals ( { children, params, modalSize, buttonClass, buttonText, modalTitle, successButtonText, cancelButtonText, initAction, successAction, cancelAction, isResourceLoading }: ModalInterface ) {
     
     const [showModal, setShowModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +59,7 @@ export default function Modals ( { children, params = undefined, modalSize, butt
         }
     }
 
-    const getModalBySize = (modalSize) => {
+    const getModalBySize = (modalSize: any) => {
         switch (modalSize) {
 
             case "popup":

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Navbar from '../../components/navbar';
 import Footer from '../../components/footer';
 
-export default function posts( { publicPosts } ) {
+export default function posts( { publicPosts }:any ) {
     return (
             <>
                 <Head>
@@ -26,7 +26,7 @@ export default function posts( { publicPosts } ) {
                                     </div>
                                     <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                                         { publicPosts.length ? (
-                                            publicPosts.map( (post, index) => (
+                                            publicPosts.map( (post:any, index:number) => (
                                                 <li className="py-12" key={index}>
                                                     <article>
                                                         <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">

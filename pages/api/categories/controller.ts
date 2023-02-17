@@ -10,10 +10,15 @@ export async function getCategoriesList ( req: NextApiRequest ) {
         throw new Error("You must be sign in to view the protected content on this page.");
     }
 
+    interface pageOptionsInterface {
+        page?: any
+        per_page?: any
+    }
+
     try {
-        const pageOptions = {
-            page: parseInt(req?.query?.page, 10) || 1,
-            per_page: parseInt(req?.body?.per_page, 10) || 10
+        const pageOptions = <pageOptionsInterface>{
+            page: Number(req?.query?.page || 1),
+            per_page: Number(req?.query?.per_page || 10)
         };
 
         const data = await Category.find().select("categoryId categoryName categoryStatus").skip((pageOptions.page ? pageOptions.page - 1 : 0) * pageOptions.per_page).limit(pageOptions.per_page).sort({createdAt: "desc"});

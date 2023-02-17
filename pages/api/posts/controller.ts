@@ -7,18 +7,37 @@ import { uploadImageToImageKit } from "../../../lib/uploadimage";
 
 export async function getPostList ( req: NextApiRequest ) {
 
+    // interface UpdateSession {
+    //     user?: {
+    //         name?: string | null;
+    //         email?: string | null;
+    //         image?: string | null;
+    //         userId?: string | null;
+    //     };
+    //     expires: ISODateString;
+    // }
+
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
     }
 
+    interface pageOptionsInterface {
+        page?: any
+        per_page?: any
+    }
+
     try {
-        const pageOptions = {
-            page: parseInt(req?.query?.page, 10) || 1,
-            per_page: parseInt(req?.body?.per_page, 10) || 10
+        // check here we have changed .query to .body
+        const pageOptions = <pageOptionsInterface>{
+            page: Number(req?.query?.page || 1),
+            per_page: Number(req?.query?.per_page || 10)
         };
-        const data = await Post.find({authorId: session.user.userId, isArchived: false}).select("postId title slug summary content tags category bannerImage isPublished createdAt updatedAt").skip((pageOptions.page ? pageOptions.page - 1 : 0) * pageOptions.per_page).limit(pageOptions.per_page).sort({createdAt: "desc"});
-        const totalCount = await Post.count({authorId: session.user.userId, isArchived: false});
+
+        const { authorId }:any = session;
+
+        const data = await Post.find({authorId: authorId, isArchived: false}).select("postId title slug summary content tags category bannerImage isPublished createdAt updatedAt").skip((pageOptions.page ? pageOptions.page - 1 : 0) * pageOptions.per_page).limit(pageOptions.per_page).sort({createdAt: "desc"});
+        const totalCount = await Post.count({authorId: authorId, isArchived: false});
         return {data: data, pagination: {...pageOptions, total_count: totalCount} };
     } catch (error) {
         throw new Error("Error While fetching data.");
@@ -39,6 +58,8 @@ export async function createPost ( req: NextApiRequest, res: NextApiResponse ) {
 
         const bannerImageIK = await uploadImageToImageKit(bannerImageFile);
 
+        const { authorId }:any = session;
+
         const newPost = new Post({
             postId: uuidv4(),
             title: title,
@@ -48,7 +69,7 @@ export async function createPost ( req: NextApiRequest, res: NextApiResponse ) {
             tags: tags,
             category: category,
             isPublished: false,
-            authorId: session.user.userId,
+            authorId: authorId,
             bannerImage: bannerImageIK
         });
 
@@ -155,7 +176,7 @@ export async function getPublicPostList ( req: NextApiRequest, res: NextApiRespo
 
     try {
 
-        const count = parseInt(req?.query?.count, 10) || 3;
+        const count:number = Number(req?.query?.count || 3);
 
         // const data = await Post.find({ isArchived: false }).select("postId title slug summary content tags category bannerImage isPublished createdAt updatedAt").limit( count ).sort({updatedAt: "desc"});
         const data = await getPublicPostCommon( count );
@@ -166,7 +187,7 @@ export async function getPublicPostList ( req: NextApiRequest, res: NextApiRespo
 
 }
 
-export async function getPublicPostCommon ( count ) {
+export async function getPublicPostCommon ( count:number ) {
 
     try {
 
