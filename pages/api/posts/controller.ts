@@ -35,10 +35,10 @@ export async function getPostList ( req: NextApiRequest ) {
             per_page: Number(req?.query?.per_page || 10)
         };
 
-        const { authorId }:any = session;
+        const { userId }:any = session?.user;
 
-        const data = await Post.find({authorId: authorId, isArchived: false}).select("postId title slug summary content tags category bannerImage isPublished createdAt updatedAt").skip((pageOptions.page ? pageOptions.page - 1 : 0) * pageOptions.per_page).limit(pageOptions.per_page).sort({createdAt: "desc"});
-        const totalCount = await Post.count({authorId: authorId, isArchived: false});
+        const data = await Post.find({authorId: userId, isArchived: false}).select("postId title slug summary content tags category bannerImage isPublished createdAt updatedAt").skip((pageOptions.page ? pageOptions.page - 1 : 0) * pageOptions.per_page).limit(pageOptions.per_page).sort({createdAt: "desc"});
+        const totalCount = await Post.count({authorId: userId, isArchived: false});
         return {data: data, pagination: {...pageOptions, total_count: totalCount} };
     } catch (error) {
         throw new Error("Error While fetching data.");
@@ -59,7 +59,7 @@ export async function createPost ( req: NextApiRequest, res: NextApiResponse ) {
 
         const bannerImageIK = await uploadImageToImageKit(bannerImageFile);
 
-        const { authorId }:any = session;
+        const { userId }:any = session?.user;
 
         const newPost = new Post({
             postId: uuidv4(),
@@ -70,7 +70,7 @@ export async function createPost ( req: NextApiRequest, res: NextApiResponse ) {
             tags: tags,
             category: category,
             isPublished: false,
-            authorId: authorId,
+            authorId: userId,
             bannerImage: bannerImageIK
         });
 
@@ -101,6 +101,8 @@ export async function updatePost ( req: NextApiRequest, res: NextApiResponse ) {
 
     try {
 
+        const { userId }:any = session?.user;
+
         const { postId, title, slug, summary, content, tags, category, bannerImage, bannerImageFile } = req.body;
 
         let updatedBannerImage;
@@ -108,7 +110,12 @@ export async function updatePost ( req: NextApiRequest, res: NextApiResponse ) {
             updatedBannerImage = await uploadImageToImageKit(bannerImageFile);
         }
 
-        await Post.findOneAndUpdate({ postId: postId }, { title: title, slug: slug, summary: summary, content: content, tags: tags, category: category, bannerImage: (updatedBannerImage ? updatedBannerImage : bannerImage) } );
+        const postUpdate = await Post.findOneAndUpdate({ postId: postId, authorId: userId+'MMM' }, { title: title, slug: slug, summary: summary, content: content, tags: tags, category: category, bannerImage: (updatedBannerImage ? updatedBannerImage : bannerImage) } );
+
+        if(!postUpdate) {
+            return res.status(400).send({error: "Something Went Worng", errorList: []});
+        }
+
         return res.status(200).json({ msg: "Post updated successfuly" });
     } catch ( error:any ) {
         if (error.name === "ValidationError") {

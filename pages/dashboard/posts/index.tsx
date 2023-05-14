@@ -59,7 +59,7 @@ export default function Dashboard () {
     useEffect( () => {
         setIsLoading(true);
         const getUserList = async () => {
-            const fetchData = await fetch("/api/posts?page="+paginationData.page+"?per_page="+paginationData.per_page, { method: 'GET', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' } });
+            const fetchData = await fetch("/api/posts?page="+paginationData.page+"&per_page="+paginationData.per_page, { method: 'GET', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' } });
             const postList = await fetchData.json();
 
             setPostData(postList.data);
