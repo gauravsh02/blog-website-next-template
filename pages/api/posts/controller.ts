@@ -4,6 +4,7 @@ import Post from "../../../model/Post";
 import User from "../../../model/User";
 import { v4 as uuidv4 } from "uuid";
 import { uploadImageToImageKit } from "../../../lib/uploadimage";
+import dbConnect from "../../../lib/dbConnect";
 
 export async function getPostList ( req: NextApiRequest ) {
 
@@ -16,7 +17,7 @@ export async function getPostList ( req: NextApiRequest ) {
     //     };
     //     expires: ISODateString;
     // }
-
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
@@ -46,7 +47,7 @@ export async function getPostList ( req: NextApiRequest ) {
 }
 
 export async function createPost ( req: NextApiRequest, res: NextApiResponse ) {
-    
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
@@ -92,7 +93,7 @@ export async function createPost ( req: NextApiRequest, res: NextApiResponse ) {
 }
 
 export async function updatePost ( req: NextApiRequest, res: NextApiResponse ) {
-    
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
@@ -123,7 +124,7 @@ export async function updatePost ( req: NextApiRequest, res: NextApiResponse ) {
 }
 
 export async function updatePostStatus ( req: NextApiRequest, res: NextApiResponse ) {
-    
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
@@ -148,7 +149,7 @@ export async function updatePostStatus ( req: NextApiRequest, res: NextApiRespon
 }
 
 export async function archivePost ( req: NextApiRequest, res: NextApiResponse ) {
-
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
@@ -178,6 +179,8 @@ export async function getPublicPostList ( req: NextApiRequest, res: NextApiRespo
 
         const count:number = Number(req?.query?.count || 3);
 
+        await dbConnect();
+
         // const data = await Post.find({ isArchived: false }).select("postId title slug summary content tags category bannerImage isPublished createdAt updatedAt").limit( count ).sort({updatedAt: "desc"});
         const data = await getPublicPostCommon( count );
         return res.status(200).json({ msg: "success", data: data });
@@ -190,7 +193,7 @@ export async function getPublicPostList ( req: NextApiRequest, res: NextApiRespo
 export async function getPublicPostCommon ( count:number ) {
 
     try {
-
+        await dbConnect();
         const data = await Post.find({ isArchived: false, isPublished: true }).select("postId title slug summary content tags category bannerImage isPublished createdAt updatedAt").limit( count ).sort({updatedAt: "desc"});
         return data;
     } catch (error) {
@@ -201,6 +204,7 @@ export async function getPublicPostCommon ( count:number ) {
 
 export async function getPublicPostDataBySlug ( req: NextApiRequest, res: NextApiResponse ) {
     try {
+        await dbConnect();
         const { slug } = req.query;
         const data = await Post.find({ isArchived: false, isPublished: true, slug: slug }).select("postId title slug summary content tags category bannerImage authorId createdAt updatedAt");
         const authorData = await User.find({ userId: data[0]["authorId"] }).select("name image");

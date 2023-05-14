@@ -3,6 +3,7 @@ import User from "../../model/User";
 import bcrypt from "bcrypt";
 import utils from "../../utils/utils";
 import { v4 as uuidv4 } from "uuid";
+import dbConnect from "../../lib/dbConnect";
 
 interface ResponseData {
     error?: string;
@@ -25,7 +26,7 @@ const signupDataValidatoin = async (name: string, email: string, password: strin
     return null;
 }
 
-export default async function handler ( req: NextApiRequest, res: NextApiResponse<ResponseData> )  {
+export default async function handler ( req: NextApiRequest, res: NextApiResponse<ResponseData> ) {
     // validate if it is a POST
     if (req.method !== "POST") {
         return res.status(400).json({ error: "This API call only accepts POST methods" });
@@ -50,6 +51,7 @@ export default async function handler ( req: NextApiRequest, res: NextApiRespons
     });
 
     try {
+        await dbConnect();
         await newUser.save();
         res.status(200).json({ msg: "Successfuly created new User: " + name })
     } catch ( error:any ) {
