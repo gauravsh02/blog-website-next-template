@@ -21,7 +21,7 @@ export default function Navbar () {
                 </>);
             case "unauthenticated":
                 return (<>
-                    <a onClick={()=>signIn()} href="javascript:void(0)" className="px-4 py-2 text-white bg-gray-600 rounded-md shadow hover:bg-gray-800" > Sign in </a>
+                    <a onClick={()=>signIn()} className="px-4 py-2 text-white bg-gray-600 rounded-md shadow hover:bg-gray-800" > Sign in </a>
                 </>);
             case "authenticated":
                 return (<>
@@ -36,7 +36,7 @@ export default function Navbar () {
             <nav className="w-full shadow bg-white text-black border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
                 <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-8">
                     <div className="flex items-center justify-between py-3 md:py-5 md:block">
-                        <a href="javascript:void(0)">
+                        <a>
                             <Image src={'/images/logo.svg'} alt={'logo'} width={100} height={60} />
                         </a>
                         <div className="md:hidden">

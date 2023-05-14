@@ -2,37 +2,41 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-    userId: {
+const enquirySchema = new Schema({
+    enquiryId: {
         type: String,
         requeired: true,
-        unique: true
+        unique: true,
+    },
+    userId: {
+        type: String,
+        required: true
     },
     name: {
         type: String,
-        requeired: true
+        required: true
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     contactNumber: {
         type: String,
-        required: false
+        required: true
     },
-    hashedPassword: {
+    type: {
         type: String,
-        required: true,
-        minlength: 5
+        required: true
     },
-    image: {
+    message: {
         type: String,
+        required: false,
         default: ''
     },
-    role: {
-        type: String,
-        default: ''
+    isArchived: {
+        type: Boolean,
+        required: false,
+        default: false
     },
     createdAt: {
         type: Date,
@@ -44,5 +48,5 @@ const userSchema = new Schema({
     }
 });
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
-export default User;
+const Enquiry = mongoose.models.Enquiry || mongoose.model("Enquiry", enquirySchema);
+export default Enquiry;

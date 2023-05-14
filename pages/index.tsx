@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -5,10 +6,97 @@ import { Inter } from '@next/font/google';
 
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
+import Modals from "../components/Modals";
+import utils from "../utils/utils";
+import { ToastContainer, toast } from "react-toastify";
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home( { publicPosts }:any ) {
+
+    interface registerData {
+        name: string, email: string, contactNumber?: number
+    }
+
+    const registerInitData: registerData = {
+        name: "",
+        email: "",
+        contactNumber: undefined
+    }
+
+    const [modalRegisterData, setModalRegisterData] = useState( registerInitData );
+    const [registerDataError, setRegisterDataError] = useState<string[]>( [] );
+    const [isResourceLoading, setIsResourceLoading] = useState(false);
+
+    const setRegisteInputData = function(value:any, inputType:string) {
+        if( inputType === "name" || inputType === "contactNumber" || inputType === "email") {
+            setModalRegisterData({...modalRegisterData, [inputType]: value});
+        }
+        //  else if ( inputType === "email" ) {
+        //     if(! /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value) && value !== "" ) {
+        //         return;
+        //     }
+        //     setModalRegisterData({...modalRegisterData, [inputType]: value});
+        // }
+    }
+
+    const initRegisterData = function () {
+        setModalRegisterData(registerInitData);
+    }
+
+    const cancelRegisterAction = async function () {
+        setRegisterDataError([]);
+        setModalRegisterData(registerInitData);
+        return true;
+    }
+
+    const newRegisterAction = async function () {
+        let error = [];
+
+        if( utils.isEmpty(modalRegisterData.name) ) {
+            error.push("Please enter Name");
+        }
+        if( utils.isEmpty(modalRegisterData.contactNumber) ) {
+            error.push("Please enter Contact Number");
+        }
+        if(! /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(modalRegisterData.email) ) {
+            error.push("Please enter valid Email");
+        }
+
+
+        if( error.length ) {
+            setRegisterDataError(error);
+            return false;
+        } else {
+            setRegisterDataError([]);
+        }
+        setIsResourceLoading(true);
+        const toastObj = toast.loading("Saving...")
+
+        const fetchData = await fetch("/api/public/registerenquiry", { 
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                name: modalRegisterData.name,
+                email: modalRegisterData.email,
+                contactNumber: modalRegisterData.contactNumber
+             })
+        });
+        if (fetchData.status !== 200) {
+            const errorMessage = await fetchData.json();
+            toast.update(toastObj, { render: errorMessage.error, type: "error", isLoading: false, position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "colored" });
+            setIsResourceLoading(false);
+            return false;
+        } else {
+            const successMessage = await fetchData.json();
+            toast.update(toastObj, { render: successMessage.msg, type: "success", isLoading: false,  position: "top-right", autoClose: 5000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "colored" });
+            setIsResourceLoading(false);
+            return true;
+        }
+    }
+
+    // useEffect( () => {
+    // }, []);
 
     return (
         <>
@@ -33,6 +121,40 @@ export default function Home( { publicPosts }:any ) {
                         <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
                             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat nemo dolores debitis eos placeat, voluptate odit molestiae reprehenderit cupiditate vitae mollitia magni temporibus assumenda delectus dolorem tempore! Aut, libero accusamus.
                         </p>
+
+                        <Modals modalSize={"medium"} buttonText={"Action"} modalTitle={"Register "} params={undefined} buttonClass={undefined} initAction={initRegisterData} successAction={newRegisterAction} cancelAction={cancelRegisterAction} successButtonText={"Create Post"} cancelButtonText={"Cancel"} isResourceLoading={isResourceLoading} >
+                            <form>
+                                { registerDataError.length ? (<div className="py-2">
+                                    <div className="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                                        <svg aria-hidden="true" className="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
+                                        <span className="sr-only">Error</span>
+                                        <div>
+                                            <span className="font-medium">Error</span>
+                                            <ul className="mt-1.5 ml-4 list-disc list-inside">
+                                                { registerDataError.map( (er, index) => (
+                                                    <li key={index}>
+                                                        {er}
+                                                    </li>
+                                                )) }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>) : ("")}
+                                <div className="py-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                                    <input type="text" id="post-title" value={modalRegisterData.name} onChange={e => { setRegisteInputData(e.target.value, "name"); }} placeholder="Name" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                </div>
+                                <div className="py-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                    <input type="text" id="post-slug" value={modalRegisterData.email} onChange={e => { setRegisteInputData(e.target.value, "email"); }} placeholder="Email" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                </div>
+                                <div className="py-2">
+                                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
+                                    <input type="number" id="post-summary" value={modalRegisterData.contactNumber} onChange={e => { setRegisteInputData(e.target.value, "contactNumber"); }} placeholder="Contact Number" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                </div>
+                            </form>
+                        </Modals>
+
                     </div>
                     <div className="w-full md:w-1/2">
                         <img src="https://ik.imagekit.io/ryuz/sample_500_p-n0z--Kk.png" alt="Monitoring" />
@@ -96,7 +218,7 @@ export default function Home( { publicPosts }:any ) {
                                             <p className="mb-3 font-normal text-gray-700 dark:text-gray-400"> {post.summary} </p>
                                             <a href={"/posts/"+post.slug} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                                 Read more
-                                                <svg aria-hidden="true" className="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                                <svg aria-hidden="true" className="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                                             </a>
                                         </div>
                                     </div>

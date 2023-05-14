@@ -2,9 +2,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import {getSession} from "next-auth/react";
 import Category from "../../../model/Category";
 import { v4 as uuidv4 } from "uuid";
+import dbConnect from "../../../lib/dbConnect";
 
 export async function getCategoriesList ( req: NextApiRequest ) {
 
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
@@ -20,7 +22,6 @@ export async function getCategoriesList ( req: NextApiRequest ) {
             page: Number(req?.query?.page || 1),
             per_page: Number(req?.query?.per_page || 10)
         };
-
         const data = await Category.find().select("categoryId categoryName categoryStatus").skip((pageOptions.page ? pageOptions.page - 1 : 0) * pageOptions.per_page).limit(pageOptions.per_page).sort({createdAt: "desc"});
         const totalCount = await Category.countDocuments();
         return {data: data, pagination: {...pageOptions, total_count: totalCount} };
@@ -31,7 +32,7 @@ export async function getCategoriesList ( req: NextApiRequest ) {
 }
 
 export async function createCategory ( req: NextApiRequest, res: NextApiResponse ) {
-    
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
@@ -62,6 +63,7 @@ export async function createCategory ( req: NextApiRequest, res: NextApiResponse
 }
 
 export async function deleteCategory ( req: NextApiRequest, res: NextApiResponse ) {
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
@@ -85,6 +87,7 @@ export async function deleteCategory ( req: NextApiRequest, res: NextApiResponse
 }
 
 export async function updateCategoryStatus ( req: NextApiRequest, res: NextApiResponse ) {
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
@@ -108,6 +111,7 @@ export async function updateCategoryStatus ( req: NextApiRequest, res: NextApiRe
 }
 
 export async function updateCategory ( req: NextApiRequest, res: NextApiResponse ) {
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
@@ -131,6 +135,7 @@ export async function updateCategory ( req: NextApiRequest, res: NextApiResponse
 }
 
 export async function getAllActiveCategory ( req: NextApiRequest, res: NextApiResponse ) {
+    await dbConnect();
     const session = await getSession({ req });
     if(!session) {
         throw new Error("You must be sign in to view the protected content on this page.");
