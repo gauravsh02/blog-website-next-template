@@ -110,7 +110,7 @@ export async function updatePost ( req: NextApiRequest, res: NextApiResponse ) {
             updatedBannerImage = await uploadImageToImageKit(bannerImageFile);
         }
 
-        const postUpdate = await Post.findOneAndUpdate({ postId: postId, authorId: userId+'MMM' }, { title: title, slug: slug, summary: summary, content: content, tags: tags, category: category, bannerImage: (updatedBannerImage ? updatedBannerImage : bannerImage) } );
+        const postUpdate = await Post.findOneAndUpdate({ postId: postId, authorId: userId }, { title: title, slug: slug, summary: summary, content: content, tags: tags, category: category, bannerImage: (updatedBannerImage ? updatedBannerImage : bannerImage) } );
 
         if(!postUpdate) {
             return res.status(400).send({error: "Something Went Worng", errorList: []});
