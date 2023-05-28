@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import moment from 'moment'
 
 import Editor from "../../../components/editor";
+import TinymceEditor from "../../../components/tinymceEditor";
 
 import { RemoveBadgeClose } from "../../../components/logo";
 
@@ -463,7 +464,7 @@ export default function Dashboard () {
                                 {/* temp for editor */}
                                 {/* modalPostData.content */}
                                 {/* setInputDataForPost */}
-                                <Editor defaultValue={editorData} setEditorValue={setEditorData} />
+                                <TinymceEditor defaultValue={editorData} setEditorValue={setEditorData} />
                             </div>
                         </form>
                     </Modals>
@@ -613,7 +614,7 @@ export default function Dashboard () {
                                                                 {/* temp for editor */}
                                                                 {/* modalPostData.content */}
                                                                 {/* setInputDataForPost */}
-                                                                <Editor defaultValue={editorData} setEditorValue={setEditorData} />
+                                                                <TinymceEditor defaultValue={editorData} setEditorValue={setEditorData} />
                                                             </div>
                                                         </form>
                                                     </Modals>

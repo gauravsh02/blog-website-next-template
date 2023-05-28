@@ -244,7 +244,7 @@ export async function getServerSideProps(context:any) {
 
     return {
         props: {
-            "publicPosts" : publicPostData.data
+            "publicPosts" : publicPostData && publicPostData.data ? publicPostData.data : []
         }
     }
 }
